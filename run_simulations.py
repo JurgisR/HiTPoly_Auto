@@ -86,25 +86,6 @@ def run_md_simulation(parameters: dict) -> str:
     run_id_for_log = parameters.get("run_id") if isinstance(parameters, dict) else "<missing-run-id>"
     print(f"Starting the MD simulation initialization for run_id: {run_id_for_log}")
     try:
-        dry_run_enabled = os.environ.get("DRY_RUN_MD_SIMULATION", "false").strip().lower() in {
-            "1", "true", "yes", "on",
-        }
-        if dry_run_enabled:
-            print("[DRY_RUN_MD_SIMULATION] run_md_simulation received parameters:")
-            try:
-                payload_text = json.dumps(parameters, ensure_ascii=False, indent=2)
-                print("[DRY_RUN_MD_SIMULATION_PAYLOAD_START]")
-                print(payload_text)
-                print("[DRY_RUN_MD_SIMULATION_PAYLOAD_END]")
-            except Exception:
-                print(str(parameters))
-            count = (
-                len(parameters.get("parameter_sets", []))
-                if isinstance(parameters, dict) and isinstance(parameters.get("parameter_sets"), list)
-                else 0
-            )
-            return f"[dry_run] Skipped MD submission. Captured run_md_simulation payload for {count} parameter set(s)."
-
         if not isinstance(parameters, dict):
             return "[run_md_error] invalid_input: expected a dict with keys: 'parameter_sets' and optional 'run_id'."
 
