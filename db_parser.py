@@ -39,7 +39,7 @@ def process_candidates(candidates):
             group__name='lipoly',
             smiles=candidate['selected_system']['smiles'],
         )
-        job = Job.objects.get(
+        job_filter = dict(
             group__name='lipoly',
             config__name='openmm_qLPG_ionic_cond_multi_system',
             parentid=species.id,
@@ -47,6 +47,9 @@ def process_candidates(candidates):
             details__molality=candidate['selected_system']['molality'],
             details__ratio=candidate['selected_system']['ratio'],
         )
+        if 'temperature' in candidate['selected_system']:
+            job_filter['details__temperature'] = candidate['selected_system']['temperature']
+        job = Job.objects.get(**job_filter)
         if job.status in ['done', 'error']:
             finished_jobs += 1
     
@@ -59,7 +62,7 @@ def process_candidates(candidates):
             group__name='lipoly',
             smiles=candidate['selected_system']['smiles'],
         )
-        job = Job.objects.get(
+        job_filter = dict(
             group__name='lipoly',
             config__name='openmm_qLPG_ionic_cond_multi_system',
             parentid=species.id,
@@ -67,6 +70,9 @@ def process_candidates(candidates):
             details__molality=candidate['selected_system']['molality'],
             details__ratio=candidate['selected_system']['ratio'],
         )
+        if 'temperature' in candidate['selected_system']:
+            job_filter['details__temperature'] = candidate['selected_system']['temperature']
+        job = Job.objects.get(**job_filter)
         if job.status == 'error':
             # Keep the original candidate entry, but do not attach results/coordination.
             print(
@@ -100,6 +106,7 @@ def process_candidates(candidates):
                 "system_type": calc.props["info"]["details"]["system"],
                 "ratio": calc.props["info"]["details"]["ratio"],
                 "ratio_type": calc.props["info"]["details"]["ratio_type"],
+                "temperature": calc.props["info"]["details"].get("temperature", 300),
                 "createtime": calc.parentjob.createtime.isoformat(),
             },
             "results": {

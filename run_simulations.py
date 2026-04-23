@@ -130,6 +130,7 @@ def run_md_simulation(parameters: dict) -> str:
                         "system_type": params["system_type"],
                         "ratio": ratio_reordered,
                         "ratio_type": params["ratio_type"],
+                        "temperature": params.get("temperature", 300),
                         "createtime": str(datetime.datetime.now()),
                         "project": project_name,
                     }
@@ -153,9 +154,9 @@ def run_md_simulation(parameters: dict) -> str:
             return f"[run_md_error] persist_failed: {exc}"
 
         # Submit MD jobs
-        cluster_path = os.environ.get("CLUSTERPATH", "/home/jurgis/SUPERCLOUD")
-        hitpoly_path = os.environ.get("HITPOLY", "$HOME/HiTPoly")
-        htvs_env = os.environ.get("HTVSENV", "htvs")
+        cluster_path = "/home/jurgis/SUPERCLOUD"
+        hitpoly_path = "/home/gridsan/jruza/HiTPoly"
+        htvs_env = "htvs"
 
         wf = workflowmanager.WorkFlow(
             root_dir="/home/jurgis",
