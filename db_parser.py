@@ -55,6 +55,8 @@ def process_candidates(candidates):
     
     if finished_jobs != len(candidates):
         print(f"Warning: {len(candidates)-finished_jobs} jobs are not finished")
+        print(f"Finished jobs: {finished_jobs}")
+        print(f"Total jobs: {len(candidates)}")
         return None
 
     for candidate in candidates:
